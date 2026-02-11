@@ -157,34 +157,20 @@ audio{display:none}
 </audio>
 
 <script>
-/* EVENLY DISTRIBUTED INTRO HEARTS */
-/* INTRO HEARTS — EVENLY SCATTERED WITH SAFE CENTER */
+/* INTRO HEARTS — NATURAL RANDOM SCATTER */
 const intro = document.getElementById("intro");
 
-const heartsCount = 36;
-const minDistance = 10;   // prevents clustering
-const safeRadius = 22;    // keeps center clear
-const placed = [];
-
-function tooClose(x, y) {
-  for (let p of placed) {
-    if (Math.hypot(p.x - x, p.y - y) < minDistance) return true;
-  }
-  return false;
-}
+const heartsCount = 40;
+const safeZone = 28;
 
 for (let i = 0; i < heartsCount; i++) {
+
   let x, y;
 
   do {
     x = Math.random() * 100;
     y = Math.random() * 100;
-  } while (
-    Math.hypot(x - 50, y - 50) < safeRadius ||
-    tooClose(x, y)
-  );
-
-  placed.push({ x, y });
+  } while (Math.hypot(x - 50, y - 50) < safeZone);
 
   let h = document.createElement("div");
   h.className = "intro-heart";
@@ -192,12 +178,13 @@ for (let i = 0; i < heartsCount; i++) {
 
   h.style.left = x + "vw";
   h.style.top = y + "vh";
-  h.style.fontSize = (14 + Math.random() * 12) + "px";
-  h.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
+  h.style.fontSize = (14 + Math.random() * 16) + "px";
+
+  const tilt = Math.random() * 60 - 30;
+  h.style.transform = `rotate(${tilt}deg)`;
 
   intro.appendChild(h);
 }
-
 /* FLOATING HEARTS */
 function createFlowHearts(){
   for(let i=0;i<25;i++){
