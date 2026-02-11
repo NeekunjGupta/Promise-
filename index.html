@@ -77,25 +77,15 @@ body{height:100vh;overflow:hidden}
   display:flex;
   justify-content:center;
   align-items:center;
-  width:70px;
-  height:70px;
+  width:70px;height:70px;
   font-size:55px;
   color:#ff4d6d;
   transform:scale(.5);
   animation:popSide 1s forwards;
 }
 
-#leftHeart{
-  left:-35px;
-  top:38%;
-  transform:scale(.5) rotate(-45deg);
-}
-
-#rightHeart{
-  right:-35px;
-  top:62%;
-  transform:scale(.5) rotate(45deg);
-}
+#leftHeart{left:-35px;top:38%;transform:scale(.5) rotate(-45deg);}
+#rightHeart{right:-35px;top:62%;transform:scale(.5) rotate(45deg);}
 
 @keyframes popSide{to{transform:scale(1)}}
 
@@ -137,18 +127,10 @@ audio{display:none}
 
 <div id="scene">
   <div id="card">
-
-    <div id="leftHeart" class="side-heart">
-      ❤️ <div class="initial">G</div>
-    </div>
-
-    <div id="rightHeart" class="side-heart">
-      ❤️ <div class="initial">N</div>
-    </div>
-
+    <div id="leftHeart" class="side-heart">❤️ <div class="initial">G</div></div>
+    <div id="rightHeart" class="side-heart">❤️ <div class="initial">N</div></div>
     <div id="text"></div>
     <div id="signature">— N</div>
-
   </div>
 </div>
 
@@ -157,45 +139,52 @@ audio{display:none}
 </audio>
 
 <script>
-/* INTRO HEARTS — SAFE TEXT AREA */
-const intro = document.getElementById("intro");
+/* INTRO HEARTS — EVENLY SPACED RANDOM */
+const intro=document.getElementById("intro");
 
-const heartsCount = 40;
+const heartsCount=28;
+const minDist=14;
+const safeLeft=25;
+const safeRight=75;
+const safeTop=30;
+const safeBottom=70;
 
-/* central rectangle to keep clear */
-const safeLeft = 20;
-const safeRight = 80;
-const safeTop = 30;
-const safeBottom = 70;
+const placed=[];
 
-for (let i = 0; i < heartsCount; i++) {
+function tooClose(x,y){
+  for(let p of placed){
+    if(Math.hypot(p.x-x,p.y-y)<minDist) return true;
+  }
+  return false;
+}
 
-  let x, y;
+for(let i=0;i<heartsCount;i++){
+  let x,y;
 
-  do {
-    x = Math.random() * 100;
-    y = Math.random() * 100;
-  } while (
-    x > safeLeft &&
-    x < safeRight &&
-    y > safeTop &&
-    y < safeBottom
+  do{
+    x=Math.random()*100;
+    y=Math.random()*100;
+  }while(
+    (x>safeLeft && x<safeRight && y>safeTop && y<safeBottom) ||
+    tooClose(x,y)
   );
 
-  let h = document.createElement("div");
-  h.className = "intro-heart";
-  h.innerHTML = "❤️";
+  placed.push({x,y});
 
-  h.style.left = x + "vw";
-  h.style.top = y + "vh";
-  h.style.fontSize = (14 + Math.random() * 16) + "px";
+  let h=document.createElement("div");
+  h.className="intro-heart";
+  h.innerHTML="❤️";
 
-  const tilt = Math.random() * 60 - 30;
-  h.style.transform = `rotate(${tilt}deg)`;
+  h.style.left=x+"vw";
+  h.style.top=y+"vh";
+  h.style.fontSize=(14+Math.random()*10)+"px";
+
+  const tilt=Math.random()*60-30;
+  h.style.transform=`rotate(${tilt}deg)`;
 
   intro.appendChild(h);
 }
-  
+
 /* FLOATING HEARTS */
 function createFlowHearts(){
   for(let i=0;i<25;i++){
