@@ -157,11 +157,16 @@ audio{display:none}
 </audio>
 
 <script>
-/* INTRO HEARTS — NATURAL RANDOM SCATTER */
+/* INTRO HEARTS — SAFE TEXT AREA */
 const intro = document.getElementById("intro");
 
 const heartsCount = 40;
-const safeZone = 28;
+
+/* central rectangle to keep clear */
+const safeLeft = 20;
+const safeRight = 80;
+const safeTop = 30;
+const safeBottom = 70;
 
 for (let i = 0; i < heartsCount; i++) {
 
@@ -170,7 +175,12 @@ for (let i = 0; i < heartsCount; i++) {
   do {
     x = Math.random() * 100;
     y = Math.random() * 100;
-  } while (Math.hypot(x - 50, y - 50) < safeZone);
+  } while (
+    x > safeLeft &&
+    x < safeRight &&
+    y > safeTop &&
+    y < safeBottom
+  );
 
   let h = document.createElement("div");
   h.className = "intro-heart";
@@ -185,6 +195,7 @@ for (let i = 0; i < heartsCount; i++) {
 
   intro.appendChild(h);
 }
+  
 /* FLOATING HEARTS */
 function createFlowHearts(){
   for(let i=0;i<25;i++){
