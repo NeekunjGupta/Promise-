@@ -1,170 +1,145 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Promise Day</title>
 
-<!-- Google Font for cursive signature -->
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
-/* ---------- GLOBAL ---------- */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", sans-serif;
-}
-
-body {
-  height: 100vh;
-  overflow: hidden;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
+body{height:100vh;overflow:hidden}
 
 /* ---------- INTRO SCREEN ---------- */
-#intro {
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(135deg, #ff758c, #ff7eb3);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  text-align: center;
-  z-index: 10;
+#intro{
+  position:fixed;inset:0;
+  background:linear-gradient(135deg,#ff758c,#ff7eb3);
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  color:white;text-align:center;overflow:hidden;
 }
 
-#intro h1 {
-  font-size: clamp(1.4rem, 4vw, 2.2rem);
-  margin-bottom: 30px;
-  padding: 0 20px;
+.intro-heart{
+  position:absolute;
+  color:rgba(255,255,255,0.35);
 }
 
-#openBtn {
-  padding: 14px 36px;
-  border-radius: 30px;
-  border: none;
-  background: #fff;
-  color: #c1121f;
-  font-size: 1.1rem;
-  cursor: pointer;
-  box-shadow: 0 0 20px rgba(255,255,255,0.6);
+#intro h1{margin-bottom:30px;padding:0 20px}
+
+#openBtn{
+  padding:14px 36px;border-radius:30px;border:none;
+  background:#fff;color:#c1121f;font-size:1.1rem;
+  cursor:pointer;
 }
 
 /* ---------- MAIN SCENE ---------- */
-#scene {
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(135deg, #ffd1dc, #ffb3c6, #fff);
-  display: none;
-  justify-content: center;
-  align-items: center;
+#scene{
+  position:fixed;inset:0;
+  background:linear-gradient(135deg,#ffd1dc,#ffb3c6,#fff);
+  display:none;justify-content:center;align-items:center;
+  overflow:hidden;
 }
 
-/* ---------- FLOATING HEARTS ---------- */
-.heart {
-  position: absolute;
-  color: rgba(255,0,70,0.35);
-  animation: float 12s linear infinite;
+/* FLOATING HEARTS (BOTTOM → TOP, BEHIND CARD) */
+.flow-heart{
+  position:absolute;
+  color:rgba(255,0,70,0.25);
+  animation:rise linear infinite;
+  z-index:0;
 }
 
-@keyframes float {
-  from { transform: translateY(110vh); }
-  to { transform: translateY(-10vh); }
+@keyframes rise{
+  from{transform:translateY(120vh)}
+  to{transform:translateY(-10vh)}
 }
 
 /* ---------- CARD ---------- */
-#card {
-  position: relative;
-  width: min(90%, 420px);
-  background: #ffe4ec;
-  border-radius: 25px;
-  padding: 30px 24px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-  opacity: 0;
-  transform: scale(0.9);
-  animation: cardIn 1.5s forwards;
+#card{
+  position:relative;
+  width:min(90%,420px);
+  background:#ffe4ec;
+  border-radius:25px;
+  padding:30px 24px;
+  box-shadow:0 20px 40px rgba(0,0,0,.25);
+  z-index:2;
+  transform:scale(.7);
+  animation:pop 1s forwards;
 }
 
-@keyframes cardIn {
-  to { opacity: 1; transform: scale(1); }
+@keyframes pop{
+  60%{transform:scale(1.05)}
+  100%{transform:scale(1)}
 }
 
-/* GOLD GLITTER BORDER */
-#card::before {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border-radius: 28px;
-  background: linear-gradient(
-    120deg,
-    gold,
-    #fff2a8,
-    gold
-  );
-  z-index: -1;
-  animation: shimmer 3s linear infinite;
+/* GOLD BORDER */
+#card::before{
+  content:"";
+  position:absolute;
+  inset:-3px;
+  border-radius:28px;
+  background:linear-gradient(120deg,gold,#fff2a8,gold);
+  z-index:-1;
+  animation:glow 3s linear infinite;
 }
 
-@keyframes shimmer {
-  to { filter: hue-rotate(360deg); }
+@keyframes glow{
+  to{filter:hue-rotate(360deg)}
 }
 
-/* ---------- BIG HEARTS ---------- */
-.side-heart {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 60px;
-  color: #ff4d6d;
-  opacity: 0;
-  animation: fadeIn 1s forwards;
+/* ---------- SIDE HEARTS ---------- */
+.side-heart{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%) scale(.5);
+  font-size:70px;
+  color:#ff4d6d;
+  animation:popSide 1s forwards;
 }
 
-#leftHeart { left: -60px; animation-delay: 1s; }
-#rightHeart { right: -60px; animation-delay: 1s; }
+#leftHeart{left:-45px;animation-delay:.8s}
+#rightHeart{right:-45px;animation-delay:.8s}
 
-.initial {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 22px;
-  font-weight: bold;
-  color: white;
-  opacity: 0;
-  animation: fadeIn 1s forwards;
+@keyframes popSide{
+  to{transform:translateY(-50%) scale(1)}
 }
 
-#G { left: -40px; animation-delay: 2s; }
-#N { right: -40px; animation-delay: 2s; }
-
-@keyframes fadeIn {
-  to { opacity: 1; }
+/* INITIALS IN HEARTS */
+.initial{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  font-weight:bold;
+  color:gold;
+  font-size:24px;
+  opacity:0;
+  animation:fadeIn 1s forwards;
 }
+
+#G{left:-22px;animation-delay:1.5s}
+#N{right:-22px;animation-delay:1.5s}
+
+@keyframes fadeIn{to{opacity:1}}
 
 /* ---------- TEXT ---------- */
-#text {
-  color: #7a0c18;
-  font-size: 1rem;
-  line-height: 1.6;
-  min-height: 260px;
+#text{
+  color:#7a0c18;
+  line-height:1.6;
+  min-height:260px;
 }
 
-/* ---------- SIGNATURE ---------- */
-#signature {
-  margin-top: 20px;
-  font-family: "Great Vibes", cursive;
-  font-size: 2.2rem;
-  color: #c1121f;
-  opacity: 0;
-  animation: fadeIn 2s forwards;
-  animation-delay: 1s;
+/* SIGNATURE (hidden initially) */
+#signature{
+  margin-top:20px;
+  font-family:"Great Vibes",cursive;
+  font-size:2.2rem;
+  color:#c1121f;
+  opacity:0;
 }
 
-/* ---------- AUDIO ---------- */
-audio { display: none; }
+/* AUDIO */
+audio{display:none}
 </style>
 </head>
 
@@ -176,10 +151,10 @@ audio { display: none; }
   <button id="openBtn">Tap to open</button>
 </div>
 
-<!-- MAIN SCENE -->
+<!-- MAIN -->
 <div id="scene">
-
   <div id="card">
+
     <div id="leftHeart" class="side-heart">❤️</div>
     <div id="rightHeart" class="side-heart">❤️</div>
 
@@ -188,18 +163,41 @@ audio { display: none; }
 
     <div id="text"></div>
     <div id="signature">— N</div>
-  </div>
 
+  </div>
 </div>
 
-<!-- MUSIC -->
 <audio id="music" loop>
-  <!-- Upload your own mp3 and change filename -->
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-const message = `Hi, my princess.
+/* INTRO HEARTS */
+for(let i=0;i<35;i++){
+  let h=document.createElement("div");
+  h.className="intro-heart";
+  h.innerHTML="❤️";
+  h.style.left=Math.random()*100+"vw";
+  h.style.top=Math.random()*100+"vh";
+  h.style.fontSize=(8+Math.random()*16)+"px";
+  intro.appendChild(h);
+}
+
+/* FLOATING HEARTS */
+function createFlowHearts(){
+  for(let i=0;i<25;i++){
+    let h=document.createElement("div");
+    h.className="flow-heart";
+    h.innerHTML="❤️";
+    h.style.left=Math.random()*100+"vw";
+    h.style.fontSize=(12+Math.random()*20)+"px";
+    h.style.animationDuration=(8+Math.random()*6)+"s";
+    scene.appendChild(h);
+  }
+}
+
+/* TYPEWRITER */
+const message=`Hi, my princess.
 
 I love you so much, baby, and I know that you love me even more. But I also know that you are scared of the future, and a whole lot can go wrong. Still, it is also true that whatever happens, however it goes, I am not leaving your side — never, ever.
 
@@ -207,42 +205,29 @@ I promise you that I will always be yours and always take care of you. I will al
 
 I love you, darling. I love you so much.`;
 
-const textBox = document.getElementById("text");
-let i = 0;
-
-function typeWriter() {
-  if (i < message.length) {
-    textBox.innerHTML += message[i];
-    let delay = 60;
-
-    if (message[i] === ",") delay = 300;
-    if (message[i] === ".") delay = 600;
-    if (message[i] === "\n") delay = 800;
-
+let i=0;
+function typeWriter(){
+  if(i<message.length){
+    text.innerHTML+=message[i];
+    let d=50;
+    if(message[i]==",") d=300;
+    if(message[i]==".") d=600;
+    if(message[i]=="\n") d=800;
     i++;
-    setTimeout(typeWriter, delay);
+    setTimeout(typeWriter,d);
+  }else{
+    signature.style.animation="fadeIn 2s forwards";
   }
 }
 
-document.getElementById("openBtn").onclick = () => {
-  document.getElementById("intro").style.display = "none";
-  document.getElementById("scene").style.display = "flex";
-  document.getElementById("music").play();
-  createHearts();
-  setTimeout(typeWriter, 2500);
+/* OPEN BUTTON */
+openBtn.onclick=()=>{
+  intro.style.display="none";
+  scene.style.display="flex";
+  music.play();
+  createFlowHearts();
+  setTimeout(typeWriter,2200);
 };
-
-function createHearts() {
-  for (let i = 0; i < 30; i++) {
-    const h = document.createElement("div");
-    h.className = "heart";
-    h.innerText = "❤️";
-    h.style.left = Math.random() * 100 + "vw";
-    h.style.fontSize = 10 + Math.random() * 20 + "px";
-    h.style.animationDuration = 8 + Math.random() * 6 + "s";
-    document.getElementById("scene").appendChild(h);
-  }
-}
 </script>
 
 </body>
