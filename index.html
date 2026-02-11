@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,23 +14,24 @@ body{height:100vh;overflow:hidden}
 /* ---------- INTRO SCREEN ---------- */
 #intro{
   position:fixed;inset:0;
-  background:linear-gradient(135deg,#ff758c,#ff7eb3);
+  background:linear-gradient(135deg,#ffc2d1,#ffd6e0);
   display:flex;flex-direction:column;
   justify-content:center;align-items:center;
-  color:white;text-align:center;overflow:hidden;
+  color:#b11226;text-align:center;overflow:hidden;
 }
 
 .intro-heart{
   position:absolute;
-  color:rgba(255,255,255,0.35);
+  color:#ff4d6d;
+  opacity:.9;
+  pointer-events:none;
 }
 
-#intro h1{margin-bottom:30px;padding:0 20px}
-
+#intro h1{margin-bottom:30px;padding:0 20px;z-index:2}
 #openBtn{
   padding:14px 36px;border-radius:30px;border:none;
   background:#fff;color:#c1121f;font-size:1.1rem;
-  cursor:pointer;
+  cursor:pointer;z-index:2;
 }
 
 /* ---------- MAIN SCENE ---------- */
@@ -42,17 +42,17 @@ body{height:100vh;overflow:hidden}
   overflow:hidden;
 }
 
-/* FLOATING HEARTS (BOTTOM → TOP, BEHIND CARD) */
+/* FLOATING HEARTS */
 .flow-heart{
   position:absolute;
-  color:rgba(255,0,70,0.25);
+  color:rgba(255,0,70,0.35);
   animation:rise linear infinite;
   z-index:0;
 }
 
 @keyframes rise{
-  from{transform:translateY(120vh)}
-  to{transform:translateY(-10vh)}
+  from{transform:translateY(120vh);}
+  to{transform:translateY(-120vh);}
 }
 
 /* ---------- CARD ---------- */
@@ -73,7 +73,7 @@ body{height:100vh;overflow:hidden}
   100%{transform:scale(1)}
 }
 
-/* GOLD BORDER */
+/* GOLD BORDER (NO COLOR SHIFT) */
 #card::before{
   content:"";
   position:absolute;
@@ -81,44 +81,35 @@ body{height:100vh;overflow:hidden}
   border-radius:28px;
   background:linear-gradient(120deg,gold,#fff2a8,gold);
   z-index:-1;
-  animation:glow 3s linear infinite;
-}
-
-@keyframes glow{
-  to{filter:hue-rotate(360deg)}
 }
 
 /* ---------- SIDE HEARTS ---------- */
 .side-heart{
   position:absolute;
-  top:50%;
-  transform:translateY(-50%) scale(.5);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:90px;height:90px;
   font-size:70px;
   color:#ff4d6d;
+  transform:scale(.5);
   animation:popSide 1s forwards;
 }
 
-#leftHeart{left:-45px;animation-delay:.8s}
-#rightHeart{right:-45px;animation-delay:.8s}
+#leftHeart{left:-40px;top:40%}
+#rightHeart{right:-40px;top:60%}
 
-@keyframes popSide{
-  to{transform:translateY(-50%) scale(1)}
-}
+@keyframes popSide{to{transform:scale(1)}}
 
-/* INITIALS IN HEARTS */
 .initial{
   position:absolute;
-  top:50%;
-  transform:translateY(-50%);
   font-weight:bold;
   color:gold;
-  font-size:24px;
+  font-size:26px;
   opacity:0;
   animation:fadeIn 1s forwards;
+  animation-delay:1.2s;
 }
-
-#G{left:-22px;animation-delay:1.5s}
-#N{right:-22px;animation-delay:1.5s}
 
 @keyframes fadeIn{to{opacity:1}}
 
@@ -129,7 +120,6 @@ body{height:100vh;overflow:hidden}
   min-height:260px;
 }
 
-/* SIGNATURE (hidden initially) */
 #signature{
   margin-top:20px;
   font-family:"Great Vibes",cursive;
@@ -138,28 +128,29 @@ body{height:100vh;overflow:hidden}
   opacity:0;
 }
 
-/* AUDIO */
 audio{display:none}
 </style>
 </head>
 
 <body>
 
-<!-- INTRO -->
 <div id="intro">
   <h1>A promising Promise Day gift to my love, happy Promise Day</h1>
   <button id="openBtn">Tap to open</button>
 </div>
 
-<!-- MAIN -->
 <div id="scene">
   <div id="card">
 
-    <div id="leftHeart" class="side-heart">❤️</div>
-    <div id="rightHeart" class="side-heart">❤️</div>
+    <div id="leftHeart" class="side-heart">
+      ❤️
+      <div class="initial">G</div>
+    </div>
 
-    <div id="G" class="initial">G</div>
-    <div id="N" class="initial">N</div>
+    <div id="rightHeart" class="side-heart">
+      ❤️
+      <div class="initial">N</div>
+    </div>
 
     <div id="text"></div>
     <div id="signature">— N</div>
@@ -172,14 +163,23 @@ audio{display:none}
 </audio>
 
 <script>
-/* INTRO HEARTS */
-for(let i=0;i<35;i++){
+/* INTRO HEARTS (avoid center zone) */
+const intro=document.getElementById("intro");
+for(let i=0;i<40;i++){
   let h=document.createElement("div");
   h.className="intro-heart";
   h.innerHTML="❤️";
-  h.style.left=Math.random()*100+"vw";
-  h.style.top=Math.random()*100+"vh";
-  h.style.fontSize=(8+Math.random()*16)+"px";
+
+  let x,y;
+  do{
+    x=Math.random()*100;
+    y=Math.random()*100;
+  }while(Math.hypot(x-50,y-50)<25);
+
+  h.style.left=x+"vw";
+  h.style.top=y+"vh";
+  h.style.fontSize=(14+Math.random()*18)+"px";
+  h.style.transform=`rotate(${Math.random()*20-10}deg)`;
   intro.appendChild(h);
 }
 
@@ -220,13 +220,12 @@ function typeWriter(){
   }
 }
 
-/* OPEN BUTTON */
 openBtn.onclick=()=>{
   intro.style.display="none";
   scene.style.display="flex";
   music.play();
   createFlowHearts();
-  setTimeout(typeWriter,2200);
+  setTimeout(typeWriter,2000);
 };
 </script>
 
